@@ -1,13 +1,13 @@
 #!/usr/bin/python
 """ holds class Place"""
-import models
-from models.base_model import BaseModel, Base
+import module
+from module.base_model import BaseModel, Base
 from os import getenv
 import sqlalchemy
 from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
 
-if models.storage_t == 'db':
+if module.storage_t == 'db':
     place_amenity = Table('place_amenity', Base.metadata,
                           Column('place_id', String(60),
                                  ForeignKey('places.id', onupdate='CASCADE',
@@ -21,7 +21,7 @@ if models.storage_t == 'db':
 
 class Place(BaseModel, Base):
     """Representation of Place """
-    if models.storage_t == 'db':
+    if module.storage_t == 'db':
         __tablename__ = 'places'
         city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
         user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
@@ -54,13 +54,13 @@ class Place(BaseModel, Base):
         """initializes Place"""
         super().__init__(*args, **kwargs)
 
-    if models.storage_t != 'db':
+    if module.storage_t != 'db':
         @property
         def reviews(self):
             """getter attribute returns the list of Review instances"""
-            from models.review import Review
+            from module.review import Review
             review_list = []
-            all_reviews = models.storage.all(Review)
+            all_reviews = module.storage.all(Review)
             for review in all_reviews.values():
                 if review.place_id == self.id:
                     review_list.append(review)
@@ -69,9 +69,9 @@ class Place(BaseModel, Base):
         @property
         def amenities(self):
             """getter attribute returns the list of Amenity instances"""
-            from models.amenity import Amenity
+            from module.amenity import Amenity
             amenity_list = []
-            all_amenities = models.storage.all(Amenity)
+            all_amenities = module.storage.all(Amenity)
             for amenity in all_amenities.values():
                 if amenity.place_id == self.id:
                     amenity_list.append(amenity)
