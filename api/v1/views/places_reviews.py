@@ -5,7 +5,7 @@ Flask route that returns json status response
 from api.v1.views import app_views
 from flask import abort, jsonify, request
 from flasgger.utils import swag_from
-from models import storage, CNC
+from module import storage, CNC
 
 
 @app_views.route('/places/<place_id>/reviews', methods=['GET', 'POST'])

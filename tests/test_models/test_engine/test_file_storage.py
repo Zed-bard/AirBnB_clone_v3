@@ -3,21 +3,25 @@
 Contains the TestFileStorageDocs classes
 """
 
-from datetime import datetime
 import inspect
-import models
-from models.engine import file_storage
-from models.amenity import Amenity
-from models.base_model import BaseModel
-from models.city import City
-from models.place import Place
-from models.review import Review
-from models.state import State
-from models.user import User
 import json
 import os
-import pep8
 import unittest
+from datetime import datetime
+
+import pep8
+
+import module
+from module import storage
+from module.amenity import Amenity
+from module.base_model import BaseModel
+from module.city import City
+from module.engine import file_storage
+from module.place import Place
+from module.review import Review
+from module.state import State
+from module.user import User
+
 FileStorage = file_storage.FileStorage
 classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
@@ -70,7 +74,7 @@ test_file_storage.py'])
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    @unittest.skipIf(module.storage_t == 'db', "not testing file storage")
     def test_all_returns_dict(self):
         """Test that all returns the FileStorage.__objects attr"""
         storage = FileStorage()
@@ -78,7 +82,7 @@ class TestFileStorage(unittest.TestCase):
         self.assertEqual(type(new_dict), dict)
         self.assertIs(new_dict, storage._FileStorage__objects)
 
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    @unittest.skipIf(module.storage_t == 'db', "not testing file storage")
     def test_new(self):
         """test that new adds an object to the FileStorage.__objects attr"""
         storage = FileStorage()
@@ -94,7 +98,7 @@ class TestFileStorage(unittest.TestCase):
                 self.assertEqual(test_dict, storage._FileStorage__objects)
         FileStorage._FileStorage__objects = save
 
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    @unittest.skipIf(module.storage_t == 'db', "not testing file storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
         storage = FileStorage()
@@ -113,3 +117,20 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    @unittest.skipIf(module.storage_t == 'db', "not testing file storage")
+    def test_get(self):
+        """Test that get resturns one object"""
+        first_state_id = list(storage.all(State).values())[0].id
+        self.assertEqual(first_state_id, storage.get(State, first_state_id).id)
+
+    @unittest.skipIf(module.storage_t == 'db', "not testing file storage")
+    def test_get_not_existing_id(self):
+        """Test that get resturns one object"""
+        self.assertEqual(None, storage.get(State, 'SomeBlaH'))
+
+    @unittest.skipIf(module.storage_t == 'db', "not testing file storage")
+    def test_count(self):
+        """Test that get resturns one object"""
+        self.assertIsInstance(storage.count(), int)
+        self.assertIsInstance(storage.count(State), int)

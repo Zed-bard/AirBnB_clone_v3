@@ -5,7 +5,7 @@ from flask import Flask
 from flask import Flask, abort
 from api.v1.views import app_views
 from os import name
-from models.state import State
+from module.state import State
 from flask import request
 
 

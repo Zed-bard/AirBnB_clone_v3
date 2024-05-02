@@ -1,7 +1,7 @@
 from flask import jsonify, abort, request
-from models import storage
-from models.state import State
-from models.city import City
+from module import storage
+from module.state import State
+from module.city import City
 from api.v1.views import app_views
 
 

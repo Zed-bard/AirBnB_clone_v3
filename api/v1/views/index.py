@@ -2,13 +2,13 @@
 """index"""
 from api.v1.views import app_views
 from flask import jsonify
-from models import storage
-from models.user import User
-from models.place import Place
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.review import Review
+from module import storage
+from module.user import User
+from module.place import Place
+from module.state import State
+from module.city import City
+from module.amenity import Amenity
+from module.review import Review
 
 classes = {"users": "User", "places": "Place", "states": "State",
            "cities": "City", "amenities": "Amenity",
