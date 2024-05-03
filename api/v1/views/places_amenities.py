@@ -14,16 +14,12 @@ def get_place_amenities(place_id):
     """get amenity information for a specified place"""
     place = storage.get("Place", place_id)
     if place is None:
-        abort(404)
-    amenities = []
+        abort(404)  # Place doesn't exist
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
-        amenity_objects = place.amenities
+        amenities = [amenity.to_dict() for amenity in place.amenities]
     else:
-        amenity_objects = place.amenity_ids
-    for amenity in amenity_objects:
-        amenities.append(amenity.to_dict())
+        amenities = [storage.get("Amenity", amenity_id).to_dict() for amenity_id in place.amenity_ids]
     return jsonify(amenities)
-
 
 @app_views.route('/places/<string:place_id>/amenities/<string:amenity_id>',
                  methods=['DELETE'], strict_slashes=False)
@@ -61,3 +57,4 @@ def post_place_amenity(place_id, amenity_id):
     place_amenities.append(amenity)
     place.save()
     return make_response(jsonify(amenityto_dict()), 201)
+
