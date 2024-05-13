@@ -1,28 +1,30 @@
 #!/usr/bin/python3
-"""app.py to connect to API"""
-import os
-from models import storage
+"""This module implement a rule that returns the status of the application"""
+from flask import jsonify
+import models
 from api.v1.views import app_views
-from flask import Flask, Blueprint, jsonify, make_response
-from flask_cors import CORS
+from models.amenity import Amenity
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.state import State
+from models.user import User
 
 
-app = Flask(__name__)
-app.register_blueprint(app_views)
-cors = CORS(app, resources={"/*": {"origins": "0.0.0.0"}})
+@app_views.route("/status", strict_slashes=False)
+def view_status():
+    """View function that return a json message"""
+    return jsonify({"status": "OK"})
 
 
-@app.teardown_appcontext
-def teardown_appcontext(code):
-    """teardown_appcontext"""
-    storage.close()
-
-
-@app.errorhandler(404)
-def page_not_found(error):
-    return make_response(jsonify({'error': 'Not found'}), 404)
-
-if __name__ == "__main__":
-    app.run(host=os.getenv('HBNB_API_HOST', '0.0.0.0'),
-            port=int(os.getenv('HBNB_API_PORT', '5000')))
-
+@app_views.route("/stats", strict_slashes=False)
+def view_stats():
+    """Veiw function that retrieves the number of each object by type"""
+    return jsonify({
+        "amenities": models.storage.count(Amenity),
+        "cities": models.storage.count(City),
+        "places": models.storage.count(Place),
+        "reviews": models.storage.count(Review),
+        "states": models.storage.count(State),
+        "users": models.storage.count(User)
+    })
