@@ -8,8 +8,7 @@ from os import name
 from models.state import State
 from flask import request
 
-
-@app_views.route('/status', methods=['GET'] strict_slashes=False)
+@app_views.route('/status', methods=['GET'], strict_slashes=False)
 def toGet():
     '''getting thing'''
     objects = storage.all('State')
@@ -34,7 +33,7 @@ def toGetid():
 def posting():
     '''Creates a State'''
     response = request.get_json()
-    if response id None:
+    if response is None:
         abort(400, {'Not a JSON'})
     if "name" not in response:
         abort(400, {'Missing name'})
@@ -49,7 +48,7 @@ def posting():
 def putinV():
     '''vladimir'''
     response = request.get_json()
-    if response id None:
+    if response is None:
         abort(400, {'Not a JSON'})
     stateObject = storage.get(State, state_id)
     if stateObject is None:
